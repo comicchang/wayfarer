@@ -1,6 +1,6 @@
 ## Wayfarer Planner, an IITC plugin to help you nominate and keep track of your candidates
 
-Let's say that you already have the map of PokéStops and Gyms, (or just Portals if you're only an Ingress player), something like this using [Pogo Tools](https://gitlab.com/NvlblNm/pogo-s2/):
+Let's say that you already have the map of PokéStops and Gyms (or just Portals if you're only an Ingress player, something like this using [Pogo Tools](https://gitlab.com/NvlblNm/pogo-s2/):
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/mapwithpogo.png"></img><br/>
 
 And now you want to better plan where to submit your candidates so they are at least 20m away from existing Portals, if possible don't share the same Level 17 cell as other existing Portals, even track possible edit requests to put things in their proper locations. Something like this: 
