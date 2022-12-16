@@ -1,18 +1,18 @@
-## Wayfarer Planner, an IITC plugin to help you nominate your candidates
+## Wayfarer Planner, an IITC plugin to help you nominate and keep track of your candidates
 
-Let's say that you already have the map of Pokestops and Gyms, (or just Portals if you're only an Ingress player), something like this using [Pogo Tools](https://gitlab.com/NvlblNm/pogo-s2/):
+Let's say that you already have the map of PokéStops and Gyms, (or just Portals if you're only an Ingress player), something like this using [Pogo Tools](https://gitlab.com/NvlblNm/pogo-s2/):
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/mapwithpogo.png"></img><br/>
 
-And now you want to better plan where to submit your candidates so they are at least 20 m. away from existing portals, if possible don't share the same Level 17 cell as other existing portals, even track possible edit requests to put things in their proper locations. Something like this, 
+And now you want to better plan where to submit your candidates so they are at least 20m away from existing Portals, if possible don't share the same Level 17 cell as other existing Portals, even track possible edit requests to put things in their proper locations. Something like this: 
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/markersonthemap.png"></img><br/>
 You could do it using Draw tools, but it's not as easy as clicking on the map, and fill any additional info to remember later what this was about
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/mapwitheditdialogue.png"></img><br/>
 
-and also this allows you to easily share your data between different devices, and even share plans with other teammates to avoid sending the same candidate twice, as it's stored in a Google Sheet
+and also this allows you to easily share your data between different devices, and even share plans with other teammates to avoid sending the same candidate twice, as it's stored in a Google Sheet.
 
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/filledsheet.png"></img><br/>
 
-It's easy to use, but it requires a bit of configuration if you want to create your own google sheet. However, when you've completed the setup, it is a matter of installing the userscript and you are good to go.
+It's easy to use, but it requires a bit of configuration if you want to create your own Google sheet. However, when you've completed the setup, it is a matter of installing the userscript and you are good to go.
 
 ## A. Install the plugin for IITC 
 If you want to make use of an existing sheet. Install the <a href="https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js?inline=false">userscript</a>, load IITC and enter the scripturl.<br/>
@@ -21,7 +21,7 @@ If you want to make use of an existing sheet. Install the <a href="https://gitla
 Test script url: https://script.google.com/macros/s/AKfycbyBx4dR0s8v1ZEsnuKFARfmibHiqTY20qO0EU3vRML4y4XW6wmu/exec Keep in mind that this a shared sheet, after checking that the plugin works as expected you must use your own sheet instead of this one.<br/>
 If you're using any extension that blocks Google domains like Privacy Badger you'll have to unblock it for this domain.
 
-List of functions is at the end of this page
+List of functions is at the end of this page.
 
 ## B. If you want to create your own sheet, you should follow these instructions:
 
@@ -32,10 +32,10 @@ List of functions is at the end of this page
  3. Go to ‘Extensions’ -> ‘Apps Script’<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/extensionsmenu.png"></img><br/>
 
- 4. Remove content in Code.gs and paste the content from this <a href="Code.gs">Code.gs</a> file and click the Save Button<br/>
+ 4. Remove content in Code.gs and paste the content from this <a href="Code.gs">Code.gs</a> file and click the ‘Save’ Button<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/setsheetscriptcontent.png"></img><br/>
 
- 5. Go to ‘initialSetup’ and select the function‘initialSetup’<br/>
+ 5. Go to ‘initialSetup’ and select the function ‘initialSetup’<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/setinitialsetup.png"></img><br/>
 
  6. Click the ‘Run’ button to run<br/>
@@ -60,8 +60,8 @@ List of functions is at the end of this page
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/scriptlog.png"></img><br/><br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/sheetcolumnsfilled.png"></img><br/>
 
- 13. Go back to Apps script and choose ‘Publish’->’New deployment’<br/>
-<img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/publishwebapp.png"></img><br/>
+ 13. Go back to Apps script and choose ‘Publish’ -> ’New deployment’<br/>
+<img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/deploy.png"></img><br/>
 
  14. Set ‘Who has access’ to ‘Anyone’.<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/deploywebapp.png"></img><br/>
@@ -78,9 +78,9 @@ If you're using any extension that blocks Google domains like Privacy Badger you
 You will need to share this URL with all people and/or devices who will share the same set of data.
 
 ## How to update the code.gs script
-If for some reason there's a need to update the script in code.gs, follow these steps
+If for some reason there's a need to update the script in code.gs, follow these steps:
 1. Replace the existing code with the new one of code.gs  
-2. Follow from step 13 above: ‘Publish’->’New deployment’.  
+2. Follow from step 13 above: ‘Publish’ -> ’New deployment’.  
 3. In the dialog of step 14, mark it as **New** Project version.   
 4. Click deploy and when you get the dialog of step 15 you're done.  
 
@@ -90,15 +90,15 @@ A new link "Wayfarer" is added in the sidebar, you can click it to open the sett
 When you enable the "Click on the map to add markers" checkbox, then you can click on the map to add new markers<br />
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/clickonmap.png"></img><br/>
 
-You will see that all input and changes will be stored in your google sheet. You can share the sheet with whomever you like, or keep it to yourself. Removing markers is a matter of removing a row from the sheet.<br/>
+You will see that all input and changes will be stored in your Google sheet. You can share the sheet with whomever you like, or keep it to yourself. Removing markers is a matter of removing a row from the sheet.<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/filledsheet.png"></img>/<br/>
 
-You can toggle several layers on and off in the layer menu in IITC, at the top right corner.<br/>
+You can toggle several layers on and off in the layer menu in IITC, by clicking at the symbol in the top right corner.<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/layer.png"><img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/layerselection.png"></img><br/>
 
 To refresh the markerset you can use the "Update candidate data" link in the dialog.
 
-You can track both candidates for new locations as well as edit requests to adjust the location of existing portals.
+You can track both candidates for new locations as well as edit requests to adjust the location of existing Portals.
 
 ## Integration with Wayfarer
 You can use an additional plugin for TamperMonkey to automatically manage your data using the nominations tracked in Wayfarer:
