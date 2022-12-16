@@ -18,7 +18,8 @@ It's easy to use, but it requires a bit of configuration if you want to create y
 If you want to make use of an existing sheet. Install the <a href="https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js?inline=false">userscript</a>, load IITC and enter the scripturl.<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/dialog.png"></img><br/>
  You can test it out with this script url
-Test script url: https://script.google.com/macros/s/AKfycbyBx4dR0s8v1ZEsnuKFARfmibHiqTY20qO0EU3vRML4y4XW6wmu/exec Keep in mind that this a shared sheet, after checking that the plugin works as expected you must use your own sheet instead of this one.<br/>
+Test script url: https://script.google.com/macros/s/AKfycbyBx4dR0s8v1ZEsnuKFARfmibHiqTY20qO0EU3vRML4y4XW6wmu/exec<br/>
+Keep in mind that this a shared sheet, after checking that the plugin works as expected you must use your own sheet instead of this one.<br/>
 If you're using any extension that blocks Google domains like Privacy Badger you'll have to unblock it for this domain.
 
 List of functions is at the end of this page.
@@ -56,7 +57,7 @@ List of functions is at the end of this page.
  11. Choose your Google account and click ‘Allow’<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/chooseallow.png"></img><br/>
 
- 12. The initialsetup will be run and the sheet will be prepared with the proper columns and column settings (switch to sheet to see results)<br/>
+ 12. The initialsetup will be run and the sheet will be prepared with the proper columns and column settings (switch to sheet to see the table)<br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/scriptlog.png"></img><br/><br/>
 <img src="https://gitlab.com/dustin-heider/wayfarer/raw/master/assets/sheetcolumnsfilled.png"></img><br/>
 
