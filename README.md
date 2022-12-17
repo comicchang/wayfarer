@@ -77,6 +77,10 @@ List of functions is at the end of this page.
 If you're using any extension that blocks Google domains like Privacy Badger you'll have to unblock it for this domain.<br/>
 
 You will need to share this URL with all people and/or devices who will share the same set of data.
+To do this, you'll have to update the permissions who can edit the spread sheet by clicking the ‘Share’ button in the top right corner.
+Under General access, change the permission to ‘Anyone with this link’ and set them as ‘Editor’.
+You should also revisit the Apps script and click ‘Deploy’. Now, head to ‘Manage Deployments’.
+Scroll down to ‘Web app’ and set ‘Who has access’ to anyone in case it's not already this option.
 
 ## How to update the code.gs script
 If for some reason there's a need to update the script in code.gs, follow these steps:
