@@ -84,6 +84,7 @@
 		showTitles: true,
 		showRadius: false,
 		showInteractionRadius: false,
+		showDedicatedButton: true,
 		scriptURL: ''
 	};
 	let settings = defaultSettings;
@@ -311,6 +312,10 @@
 		}
 	}
 
+	function toggleDedicatedButton(){
+		$('.toggle-create-waypoints').toggle();
+	}
+
 	function drawInputPopop(latlng, markerData) {
 		const formpopup = L.popup();
 
@@ -469,6 +474,7 @@
 			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">Show submit radius</label></p>
 			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
 			 <p><input type="checkbox" id="chkPlaceMarkers"><label for="chkPlaceMarkers">Click on the map to add markers</label></p>
+			 <p><input type="checkbox" id="chkDedicatedButton"><label for="chkDedicatedButton">Add Dedicated Button</label></p>
 			`;
 
 		const container = dialog({
@@ -543,10 +549,19 @@
 			drawMarkers();
 		});
 
+		const chkDedicatedButton = div.querySelector('#chkDedicatedButton');
+		chkDedicatedButton.checked = settings.showDedicatedButton;
+		chkDedicatedButton.addEventListener('change', e => {
+			settings.showDedicatedButton = chkDedicatedButton.checked;
+			saveSettings();
+			toggleDedicatedButton();
+		});
+
 		const chkPlaceMarkers = div.querySelector('#chkPlaceMarkers');
 		chkPlaceMarkers.checked = isPlacingMarkers;
 		chkPlaceMarkers.addEventListener('change', e => {
 			isPlacingMarkers = chkPlaceMarkers.checked;
+			$('.toggle-create-waypoints').toggleClass('active');
 			if (!isPlacingMarkers && editmarker != null) {
 				map.closePopup();
 				map.removeLayer(editmarker);
@@ -641,6 +656,28 @@
 				max-height: none;
 				margin-top: 0em;
 			}
+			.toggle-create-waypoints{
+				box-shadow: 0 0 5px;
+				cursor:pointer;
+			    font-weight: bold;
+    			color: #000!important;
+				background-color: #fff;
+				border-bottom: 1px solid #ccc;
+				width: 26px;
+				height: 26px;
+				line-height: 26px;
+				display: block;
+				text-align: center;
+				text-decoration: none;
+				border-radius: 4px;
+				border-bottom: none;
+			}
+			.toggle-create-waypoints:hover{
+				text-decoration:none;
+			}
+			.toggle-create-waypoints.active{
+				background-color:#ffce00;
+			}
 
 			`)
 			.appendTo('head');
@@ -690,6 +727,40 @@
 		} else {
 			showDialog();
 		}
+		L.Control.CreatePoints = L.Control.extend({
+			onAdd: function(map) {
+				var button = L.DomUtil.create('a');
+				button.classList.add('toggle-create-waypoints');
+				button.href = '#';
+				button.innerHTML = 'P+';
+				return button;
+			},
+
+			onRemove: function(map) {
+				// Nothing to do here
+			}
+		});
+
+		L.control.createpoints = function(opts) {
+			return new L.Control.CreatePoints(opts);
+		}
+
+		L.control.createpoints({ position: 'topleft' }).addTo(map);
+		if(!settings.showDedicatedButton){
+			$('.toggle-create-waypoints').hide();
+		}
+		$('.toggle-create-waypoints').on('click',function(e){
+			e.preventDefault();
+			e.stopPropagation();
+			$(this).toggleClass('active');
+			isPlacingMarkers = !isPlacingMarkers;
+			if (!isPlacingMarkers && editmarker != null) {
+				map.closePopup();
+				map.removeLayer(editmarker);
+				editmarker = null;
+			}
+		});
+
 	};
 
 	// PLUGIN END //////////////////////////////////////////////////////////
