@@ -2,9 +2,9 @@
 // @name         Wayfarer Translate
 // @version      0.3.2
 // @description  Add translate option to Wayfarer
-// @namespace    https://gitlab.com/AlfonsoML/wayfarer/
-// @downloadURL  https://gitlab.com/AlfonsoML/wayfarer/raw/master/wayfarer-translate.user.js
-// @homepageURL  https://gitlab.com/AlfonsoML/wayfarer/
+// @namespace    https://gitlab.com/NvlblNm/wayfarer/
+// @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-translate.user.js
+// @homepageURL  https://gitlab.com/NvlblNm/wayfarer/
 // @match        https://wayfarer.nianticlabs.com/*
 // ==/UserScript==
 
