@@ -473,8 +473,6 @@
 			 <p><input type="checkbox" id="chkShowTitles"><label for="chkShowTitles">Show titles</label></p>
 			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">Show submit radius</label></p>
 			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
-			 <p><input type="checkbox" id="chkPlaceMarkers"><label for="chkPlaceMarkers">Click on the map to add markers</label></p>
-			 <p><input type="checkbox" id="chkDedicatedButton"><label for="chkDedicatedButton">Add Dedicated Button</label></p>
 			`;
 
 		const container = dialog({
@@ -548,38 +546,19 @@
 			saveSettings();
 			drawMarkers();
 		});
-
-		const chkDedicatedButton = div.querySelector('#chkDedicatedButton');
-		chkDedicatedButton.checked = settings.showDedicatedButton;
-		chkDedicatedButton.addEventListener('change', e => {
-			settings.showDedicatedButton = chkDedicatedButton.checked;
-			saveSettings();
-			toggleDedicatedButton();
-		});
-
-		const chkPlaceMarkers = div.querySelector('#chkPlaceMarkers');
-		chkPlaceMarkers.checked = isPlacingMarkers;
-		chkPlaceMarkers.addEventListener('change', e => {
-			isPlacingMarkers = chkPlaceMarkers.checked;
-			$('.toggle-create-waypoints').toggleClass('active');
-			if (!isPlacingMarkers && editmarker != null) {
-				map.closePopup();
-				map.removeLayer(editmarker);
-				editmarker = null;
-			}
-			//settings.isPlacingMarkers = chkPlaceMarkers.checked;
-			//saveSettings();
-		});
-
-		if (!settings.scriptURL) {
-			chkPlaceMarkers.disabled = true;
-			chkPlaceMarkers.parentNode.classList.add('wayfarer-planner__disabled');
-			linkRefresh.classList.add('wayfarer-planner__disabled');
-		}
 		txtInput.addEventListener('input', e => {
-			chkPlaceMarkers.disabled = !txtInput.value;
-			chkPlaceMarkers.parentNode.classList.toggle('wayfarer-planner__disabled', !txtInput.value);
-			linkRefresh.classList.toggle('wayfarer-planner__disabled', !txtInput.value);
+			if(txtInput.value){
+				try {
+					new URL(txtInput.value);
+					if(txtInput.value.startsWith('https://script.google.com/macros/')){
+						$('.toggle-create-waypoints').show();
+						return;
+					}
+				} catch (error) {
+
+				}
+			}
+			$('.toggle-create-waypoints').hide();
 		});
 	}
 
@@ -731,6 +710,10 @@
 			onAdd: function(map) {
 				var button = L.DomUtil.create('a');
 				button.classList.add('toggle-create-waypoints');
+				if(!settings.scriptURL){
+					button.style.display = 'none';
+				}
+
 				button.href = '#';
 				button.innerHTML = 'P+';
 				return button;
@@ -746,9 +729,6 @@
 		}
 
 		L.control.createpoints({ position: 'topleft' }).addTo(map);
-		if(!settings.showDedicatedButton){
-			$('.toggle-create-waypoints').hide();
-		}
 		$('.toggle-create-waypoints').on('click',function(e){
 			e.preventDefault();
 			e.stopPropagation();
