@@ -84,7 +84,6 @@
 		showTitles: true,
 		showRadius: false,
 		showInteractionRadius: false,
-		showDedicatedButton: true,
 		scriptURL: ''
 	};
 	let settings = defaultSettings;
@@ -310,10 +309,6 @@
 
 			drawInputPopop(e.latlng);
 		}
-	}
-
-	function toggleDedicatedButton(){
-		$('.toggle-create-waypoints').toggle();
 	}
 
 	function drawInputPopop(latlng, markerData) {
