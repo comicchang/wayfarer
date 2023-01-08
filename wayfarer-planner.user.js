@@ -2,7 +2,7 @@
 // @id           wayfarer-planner@NvlblNm
 // @name         IITC plugin: Wayfarer Planner
 // @category     Layer
-// @version      1.162
+// @version      1.170
 // @namespace    https://gitlab.com/NvlblNm/wayfarer/
 // @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js
 // @homepageURL  https://gitlab.com/NvlblNm/wayfarer/
@@ -468,7 +468,6 @@
 			 <p><input type="checkbox" id="chkShowTitles"><label for="chkShowTitles">Show titles</label></p>
 			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">Show submit radius</label></p>
 			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
-			 <p><input type="checkbox" id="chkPlaceMarkers"><label for="chkPlaceMarkers">Click on the map to add markers</label></p>
 			`;
 
 		const container = dialog({
@@ -542,29 +541,19 @@
 			saveSettings();
 			drawMarkers();
 		});
-
-		const chkPlaceMarkers = div.querySelector('#chkPlaceMarkers');
-		chkPlaceMarkers.checked = isPlacingMarkers;
-		chkPlaceMarkers.addEventListener('change', e => {
-			isPlacingMarkers = chkPlaceMarkers.checked;
-			if (!isPlacingMarkers && editmarker != null) {
-				map.closePopup();
-				map.removeLayer(editmarker);
-				editmarker = null;
-			}
-			//settings.isPlacingMarkers = chkPlaceMarkers.checked;
-			//saveSettings();
-		});
-
-		if (!settings.scriptURL) {
-			chkPlaceMarkers.disabled = true;
-			chkPlaceMarkers.parentNode.classList.add('wayfarer-planner__disabled');
-			linkRefresh.classList.add('wayfarer-planner__disabled');
-		}
 		txtInput.addEventListener('input', e => {
-			chkPlaceMarkers.disabled = !txtInput.value;
-			chkPlaceMarkers.parentNode.classList.toggle('wayfarer-planner__disabled', !txtInput.value);
-			linkRefresh.classList.toggle('wayfarer-planner__disabled', !txtInput.value);
+			if(txtInput.value){
+				try {
+					new URL(txtInput.value);
+					if(txtInput.value.startsWith('https://script.google.com/macros/')){
+						$('.toggle-create-waypoints').show();
+						return;
+					}
+				} catch (error) {
+
+				}
+			}
+			$('.toggle-create-waypoints').hide();
 		});
 	}
 
@@ -641,6 +630,28 @@
 				max-height: none;
 				margin-top: 0em;
 			}
+			.toggle-create-waypoints{
+				box-shadow: 0 0 5px;
+				cursor:pointer;
+			    font-weight: bold;
+    			color: #000!important;
+				background-color: #fff;
+				border-bottom: 1px solid #ccc;
+				width: 26px;
+				height: 26px;
+				line-height: 26px;
+				display: block;
+				text-align: center;
+				text-decoration: none;
+				border-radius: 4px;
+				border-bottom: none;
+			}
+			.toggle-create-waypoints:hover{
+				text-decoration:none;
+			}
+			.toggle-create-waypoints.active{
+				background-color:#ffce00;
+			}
 
 			`)
 			.appendTo('head');
@@ -690,6 +701,41 @@
 		} else {
 			showDialog();
 		}
+		L.Control.CreatePoints = L.Control.extend({
+			onAdd: function(map) {
+				var button = L.DomUtil.create('a');
+				button.classList.add('toggle-create-waypoints');
+				if(!settings.scriptURL){
+					button.style.display = 'none';
+				}
+
+				button.href = '#';
+				button.innerHTML = 'P+';
+				return button;
+			},
+
+			onRemove: function(map) {
+				// Nothing to do here
+			}
+		});
+
+		L.control.createpoints = function(opts) {
+			return new L.Control.CreatePoints(opts);
+		}
+
+		L.control.createpoints({ position: 'topleft' }).addTo(map);
+		$('.toggle-create-waypoints').on('click',function(e){
+			e.preventDefault();
+			e.stopPropagation();
+			$(this).toggleClass('active');
+			isPlacingMarkers = !isPlacingMarkers;
+			if (!isPlacingMarkers && editmarker != null) {
+				map.closePopup();
+				map.removeLayer(editmarker);
+				editmarker = null;
+			}
+		});
+
 	};
 
 	// PLUGIN END //////////////////////////////////////////////////////////
