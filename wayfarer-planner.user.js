@@ -84,7 +84,8 @@
 		showTitles: true,
 		showRadius: false,
 		showInteractionRadius: false,
-		scriptURL: ''
+		scriptURL: '',
+		disableDraggingMarkers: false
 	};
 	let settings = defaultSettings;
 
@@ -252,12 +253,16 @@
 		const layerData = mapLayers[candidate.status];
 		const markerColor = layerData.color;
 		const markerLayer = layerData.layer;
+		let draggable = true;
+		if(settings.disableDraggingMarkers){
+			draggable = false;
+		}
 
 		const marker = createGenericMarker(portalLatLng, markerColor, {
 			title: candidate.title,
 			id: candidate.id,
 			data: candidate,
-			draggable: true
+			draggable: draggable
 		});
 
 		marker.on('dragend', function (e) {
@@ -468,6 +473,7 @@
 			 <p><input type="checkbox" id="chkShowTitles"><label for="chkShowTitles">Show titles</label></p>
 			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">Show submit radius</label></p>
 			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
+			 <p><input type="checkbox" id="chkDisableDraggingMarkers"><label for="chkDisableDraggingMarkers">Disable Dragging Markers</label></p>
 			`;
 
 		const container = dialog({
@@ -538,6 +544,13 @@
 		chkShowInteractRadius.checked = settings.showInteractionRadius;
 		chkShowInteractRadius.addEventListener('change', e => {
 			settings.showInteractionRadius = chkShowInteractRadius.checked;
+			saveSettings();
+			drawMarkers();
+		});
+		const chkDisableDraggingMarkers = div.querySelector('#chkDisableDraggingMarkers');
+		chkDisableDraggingMarkers.checked = settings.disableDraggingMarkers;
+		chkDisableDraggingMarkers.addEventListener('change', e => {
+			settings.disableDraggingMarkers = chkDisableDraggingMarkers.checked;
 			saveSettings();
 			drawMarkers();
 		});
