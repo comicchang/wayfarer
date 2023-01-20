@@ -365,8 +365,12 @@
 				</label>`;
 		}
 		var image = ''
+		var largeImageUrl = imageUrl;
+		if(largeImageUrl.includes('googleusercontent')){
+			largeImageUrl += '=s0';
+		}
 		if (imageUrl !== '' && imageUrl !== undefined && settings.enableImagePreview) {
-			image = `<label>Image</label> <center><a href="${imageUrl}" target="_blank"><img class="imagePreview" src="${imageUrl}"></center></a>`;
+			image = `<label>Image</label> <center><a href="${largeImageUrl}" target="_blank"><img class="imagePreview" src="${imageUrl}"></center></a>`;
 		}
 
 		let formContent = `<div class="wayfarer-planner-popup"><form id="submit-to-wayfarer">
@@ -400,7 +404,7 @@
 		}
 
 		if (imageUrl !== '' && imageUrl !== undefined && !settings.enableImagePreview) {
-			formContent += ' <a href="' + imageUrl + '" style="padding:4px; float:right;" target="_blank">Image</a>';
+			formContent += ' <a href="' + largeImageUrl + '" style="padding:4px; float:right;" target="_blank">Image</a>';
 		}
 		const align = id !== '' ? 'float: right' : 'box-sizing: border-box; text-align: right; display: inline-block; width: 100%';
 		formContent += ` <a href="https://www.google.com/maps?layer=c&cbll=${lat},${lng}" style="padding:4px; ${align};" target="_blank">Street View</a>`;
@@ -703,8 +707,9 @@
 			}
 			#submit-to-wayfarer .imagePreview{
 				max-width:100%;
+				max-height:150px;
 			}	
-
+			
 
 			`)
 			.appendTo('head');
