@@ -85,7 +85,8 @@
 		showRadius: false,
 		showInteractionRadius: false,
 		scriptURL: '',
-		disableDraggingMarkers: false
+		disableDraggingMarkers: false,
+		enableImagePreview: true,
 	};
 	let settings = defaultSettings;
 
@@ -347,6 +348,10 @@
 		const options = Object.keys(mapLayers)
 			.map(id => '<option value="' + id + '"' + (id == status ? ' selected="selected"' : '') + '>' + mapLayers[id].optionTitle + '</option>')
 			.join('');
+		var image = ''
+		if (imageUrl !== '' && imageUrl !== undefined && settings.enableImagePreview) {
+			image = `<label>Image</label> <center><a href="${imageUrl}" target="_blank"><img class="imagePreview" src="${imageUrl}"></center></a>`;
+		}
 
 		let formContent = `<div class="wayfarer-planner-popup"><form id="submit-to-wayfarer">
 			<label>Status
@@ -358,6 +363,7 @@
 			<label>Description
 			<input name="description" type="text" autocomplete="off" placeholder="Description" value="${description}">
 			</label>
+			${image}
 			<div class='wayfarer-expander' title='Click to expand additional fields'>»</div>
 			<div class='wayfarer-extraData'>
 			<label>Submitted date
@@ -378,7 +384,7 @@
 			formContent += '<a style="padding:4px; display: inline-block;" id="deletePortalCandidate">Delete 🗑️</a>';
 		}
 
-		if (imageUrl !== '' && imageUrl !== undefined) {
+		if (imageUrl !== '' && imageUrl !== undefined && !settings.enableImagePreview) {
 			formContent += ' <a href="' + imageUrl + '" style="padding:4px; float:right;" target="_blank">Image</a>';
 		}
 		const align = id !== '' ? 'float: right' : 'box-sizing: border-box; text-align: right; display: inline-block; width: 100%';
@@ -474,6 +480,7 @@
 			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">Show submit radius</label></p>
 			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
 			 <p><input type="checkbox" id="chkDisableDraggingMarkers"><label for="chkDisableDraggingMarkers">Disable Dragging Markers</label></p>
+			 <p><input type="checkbox" id="chkEnableImagePreview"><label for="chkEnableImagePreview">Enable Image Preview</label></p>
 			`;
 
 		const container = dialog({
@@ -554,6 +561,13 @@
 			saveSettings();
 			drawMarkers();
 		});
+		const chkEnableImagePreview = div.querySelector('#chkEnableImagePreview');
+		chkEnableImagePreview.checked = settings.enableImagePreview;
+		chkEnableImagePreview.addEventListener('change', e => {
+			settings.enableImagePreview = chkEnableImagePreview.checked;
+			saveSettings();
+		});
+
 		txtInput.addEventListener('input', e => {
 			if(txtInput.value){
 				try {
@@ -665,6 +679,10 @@
 			.toggle-create-waypoints.active{
 				background-color:#ffce00;
 			}
+			#submit-to-wayfarer .imagePreview{
+				max-width:100%;
+			}	
+
 
 			`)
 			.appendTo('head');
