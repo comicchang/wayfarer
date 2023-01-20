@@ -48,6 +48,11 @@
 			title: 'Submitted',
 			optionTitle: 'Submitted'
 		},
+		voting: {
+			color: 'brown',
+			title: 'Voting',
+			optionTitle: 'Voting'
+		},
 		NIANTIC_REVIEW: {
 			color: 'pink',
 			title: 'Niantic Review',

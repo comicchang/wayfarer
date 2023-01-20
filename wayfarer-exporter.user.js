@@ -235,8 +235,11 @@ function init() {
 		if (status == 'HELD') {
 			return 'held';
 		}
-		if (status == 'NOMINATED' || status == 'VOTING') {
+		if (status == 'NOMINATED' ) {
 			return 'submitted';
+		}
+		if (status == 'VOTING' ) {
+			return 'voting';
 		}
 		if (status == 'REJECTED' || status == 'DUPLICATE' || status == 'WITHDRAWN') {
 			return 'rejected';
