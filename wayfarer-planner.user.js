@@ -91,6 +91,7 @@
 		showInteractionRadius: false,
 		scriptURL: '',
 		disableDraggingMarkers: false,
+		enableCoordinatesEdit: true,
 		enableImagePreview: true,
 	};
 	let settings = defaultSettings;
@@ -353,6 +354,16 @@
 		const options = Object.keys(mapLayers)
 			.map(id => '<option value="' + id + '"' + (id == status ? ' selected="selected"' : '') + '>' + mapLayers[id].optionTitle + '</option>')
 			.join('');
+		var coordinates = `<input name="lat" type="hidden" value="${lat}">
+			<input name="lng" type="hidden" value="${lng}">`;
+		if(settings.enableCoordinatesEdit){
+			coordinates = `<label>Latitude
+				<input name="lat" type="text" autocomplete="off" value="${lat}">
+				</label>
+				<label>Longitude
+				<input name="lng" type="text" autocomplete="off" value="${lng}">
+				</label>`;
+		}
 		var image = ''
 		if (imageUrl !== '' && imageUrl !== undefined && settings.enableImagePreview) {
 			image = `<label>Image</label> <center><a href="${imageUrl}" target="_blank"><img class="imagePreview" src="${imageUrl}"></center></a>`;
@@ -371,6 +382,7 @@
 			${image}
 			<div class='wayfarer-expander' title='Click to expand additional fields'>»</div>
 			<div class='wayfarer-extraData'>
+			${coordinates}
 			<label>Submitted date
 			<input name="submitteddate" type="text" autocomplete="off" placeholder="dd-mm-jjjj" value="${submitteddate}">
 			</label>
@@ -379,8 +391,6 @@
 			</label>
 			</div>
 			<input name="id" type="hidden" value="${id}">
-			<input name="lat" type="hidden" value="${lat}">
-			<input name="lng" type="hidden" value="${lng}">
 			<input name="nickname" type="hidden" value="${window.PLAYER.nickname}">
 			<button type="submit" id='wayfarer-submit'>Send</button>
 			</form>`;
@@ -485,6 +495,7 @@
 			 <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">Show submit radius</label></p>
 			 <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
 			 <p><input type="checkbox" id="chkDisableDraggingMarkers"><label for="chkDisableDraggingMarkers">Disable Dragging Markers</label></p>
+			 <p><input type="checkbox" id="chkEnableCoordinatesEdit"><label for="chkEnableCoordinatesEdit">Enable Coordinates Edit</label></p>
 			 <p><input type="checkbox" id="chkEnableImagePreview"><label for="chkEnableImagePreview">Enable Image Preview</label></p>
 			`;
 
@@ -565,6 +576,12 @@
 			settings.disableDraggingMarkers = chkDisableDraggingMarkers.checked;
 			saveSettings();
 			drawMarkers();
+		});
+		const chkEnableCoordinatesEdit = div.querySelector('#chkEnableCoordinatesEdit');
+		chkEnableCoordinatesEdit.checked = settings.enableCoordinatesEdit;
+		chkEnableCoordinatesEdit.addEventListener('change', e => {
+			settings.enableCoordinatesEdit = chkEnableCoordinatesEdit.checked;
+			saveSettings();
 		});
 		const chkEnableImagePreview = div.querySelector('#chkEnableImagePreview');
 		chkEnableImagePreview.checked = settings.enableImagePreview;
