@@ -187,7 +187,7 @@ function init() {
 			return false;
 		}
 
-		if (nomination.status == 'NOMINATED' || nomination.status == 'VOTING' || nomination.status == 'HELD' || nomination.status == 'APPEALED') {
+		if (nomination.status == 'NOMINATED' || nomination.status == 'VOTING' || nomination.status == 'HELD' || nomination.status == 'APPEALED' || nomination.status == 'NIANTIC_REVIEW') {
 			/*
 			Try to find nominations added manually in IITC:
 			same name in the same level 17 cell
