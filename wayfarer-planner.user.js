@@ -366,11 +366,11 @@
 		}
 		var image = ''
 		var largeImageUrl = imageUrl;
-		if(largeImageUrl.includes('googleusercontent')){
+		if(largeImageUrl.includes('googleusercontent') && !largeImageUrl.includes('=')){
 			largeImageUrl += '=s0';
 		}
 		if (imageUrl !== '' && imageUrl !== undefined && settings.enableImagePreview) {
-			image = `<label>Image</label> <center><a href="${largeImageUrl}" target="_blank"><img class="imagePreview" src="${imageUrl}"></center></a>`;
+			image = `<a href="${largeImageUrl}" target="_blank" class="imagePreviewContainer"><img class="imagePreview" src="${imageUrl}"></a>`;
 		}
 
 		let formContent = `<div class="wayfarer-planner-popup"><form id="submit-to-wayfarer">
@@ -390,7 +390,7 @@
 			<label>Submitted date
 			<input name="submitteddate" type="text" autocomplete="off" placeholder="dd-mm-jjjj" value="${submitteddate}">
 			</label>
-			<label>Image
+			<label>Image URL
 			<input name="candidateimageurl" type="text" autocomplete="off" placeholder="http://?.googleusercontent.com/***" value="${imageUrl}">
 			</label>
 			</div>
@@ -704,6 +704,11 @@
 			}
 			.toggle-create-waypoints.active{
 				background-color:#ffce00;
+			}
+			#submit-to-wayfarer .imagePreviewContainer{
+				display:block;
+				margin-top:5px;
+				text-align:center;
 			}
 			#submit-to-wayfarer .imagePreview{
 				max-width:100%;
