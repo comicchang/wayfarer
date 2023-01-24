@@ -441,6 +441,12 @@
 			contentType: false,
 			success: function (data, status, header) {
 				removeExistingMarker(id);
+				for (let i = 0; i < markercollection.length; i++) {
+					if (markercollection[i].id === id) {
+						markercollection.splice(i, 1);
+						break;
+					}
+				}
 				map.closePopup();
 			},
 			error: function (x, y, z) {
@@ -730,6 +736,17 @@
 				contentType: false,
 				success: function (data, status, header) {
 					drawMarker(data);
+					let markerAlreadyExists = false;
+					for (let i = 0; i < markercollection.length; i++) {
+						if (markercollection[i].id === data.id) {
+							Object.assign(markercollection[i], data);
+							markerAlreadyExists = true;
+							break;
+						}
+					}
+					if (!markerAlreadyExists) {
+						markercollection.push(data);
+					}
 					if (editmarker != null) {
 						map.removeLayer(editmarker);
 						editmarker = null;
