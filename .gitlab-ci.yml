@@ -1,0 +1,23 @@
+default:
+    image: node:18-alpine
+
+eslint:
+    script:
+        - npm ci
+        - npx eslint --format gitlab wayfarer-exporter.user.js
+        - npx eslint --format gitlab wayfarer-planner.user.js
+        - npx eslint --format gitlab wayfarer-translate.user.js
+    artifacts:
+        reports:
+            codequality: gl-codequality.json
+
+prettier:
+    script:
+        - npm ci
+        - npx prettier --check wayfarer-translate.user.js
+        - npx prettier --check wayfarer-planner.user.js
+        - npx prettier --check wayfarer-exporter.user.js
+    artifacts:
+        reports:
+            codequality: gl-codequality.json
+
