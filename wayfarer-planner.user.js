@@ -2,7 +2,7 @@
 // @id           wayfarer-planner@NvlblNm
 // @name         IITC plugin: Wayfarer Planner
 // @category     Layer
-// @version      1.170
+// @version      1.171
 // @namespace    https://gitlab.com/NvlblNm/wayfarer/
 // @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js
 // @homepageURL  https://gitlab.com/NvlblNm/wayfarer/
