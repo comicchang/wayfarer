@@ -625,7 +625,7 @@ function wrapper(pluginInfo) {
              <p><input type="checkbox" id="chkShowRadius"><label for="chkShowRadius">Show submit radius</label></p>
              <p><input type="checkbox" id="chkShowInteractRadius"><label for="chkShowInteractRadius">Show interaction radius</label></p>
              <p><input type="checkbox" id="chkShowVotingProximity"><label for="chkShowVotingProximity">Show voting proximity</label></p>
-             <p><input type="checkbox" id="chkDisableDraggingMarkers"><label for="chkDisableDraggingMarkers">Disable Dragging Markers</label></p>
+             <p><input type="checkbox" id="chkEnableDraggingMarkers"><label for="chkEnableDraggingMarkers">Enable Dragging Markers</label></p>
              <p><input type="checkbox" id="chkEnableCoordinatesEdit"><label for="chkEnableCoordinatesEdit">Enable Coordinates Edit</label></p>
              <p><input type="checkbox" id="chkEnableImagePreview"><label for="chkEnableImagePreview">Enable Image Preview</label></p>
             `
@@ -726,12 +726,12 @@ function wrapper(pluginInfo) {
             saveSettings()
             drawMarkers()
         })
-        const chkDisableDraggingMarkers = div.querySelector(
-            '#chkDisableDraggingMarkers'
+        const chkEnableDraggingMarkers = div.querySelector(
+            '#chkEnableDraggingMarkers'
         )
-        chkDisableDraggingMarkers.checked = settings.disableDraggingMarkers
-        chkDisableDraggingMarkers.addEventListener('change', (e) => {
-            settings.disableDraggingMarkers = chkDisableDraggingMarkers.checked
+        chkEnableDraggingMarkers.checked = !settings.disableDraggingMarkers
+        chkEnableDraggingMarkers.addEventListener('change', (e) => {
+            settings.disableDraggingMarkers = !chkEnableDraggingMarkers.checked
             saveSettings()
             drawMarkers()
         })
