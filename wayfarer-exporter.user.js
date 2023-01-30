@@ -534,6 +534,8 @@ function init() {
                 const submitted = allData.filter(
                     (c) =>
                         c.status === 'submitted' ||
+                        c.status === 'voting' ||
+                        c.status === 'NIANTIC_REVIEW' ||
                         c.status === 'potential' ||
                         c.status === 'held' ||
                         c.status === 'rejected' ||
