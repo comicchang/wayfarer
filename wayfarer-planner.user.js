@@ -458,18 +458,16 @@ function wrapper(pluginInfo) {
         }
         let image = ''
         let largeImageUrl = imageUrl
-        if (
-            largeImageUrl.includes('googleusercontent') &&
-            !largeImageUrl.includes('=')
-        ) {
-            largeImageUrl += '=s0'
+        if (imageUrl.includes('googleusercontent')) {
+            largeImageUrl = largeImageUrl.replace(/(=.*)?$/, '=s0')
+            imageUrl = imageUrl.replace(/(=.*)?$/, '=s200')
         }
         if (
             imageUrl !== '' &&
             imageUrl !== undefined &&
             settings.enableImagePreview
         ) {
-            image = `<a href="${largeImageUrl}" target="_blank" class="imagePreviewContainer"><img class="imagePreview" src="${imageUrl}"></a>`
+            image = `<a href="${largeImageUrl}" target="_blank" class="imagePreviewContainer"><img class="imagePreview loading" src="${imageUrl}"></a>`
         }
 
         let formContent = `<div class="wayfarer-planner-popup"><form id="submit-to-wayfarer">
@@ -535,6 +533,10 @@ function wrapper(pluginInfo) {
         expander.addEventListener('click', function () {
             expander.parentNode.classList.toggle('wayfarer__expanded')
         })
+        const previewImageElement = document.querySelector('.loading')
+        previewImageElement.onload = function () {
+            previewImageElement.classList.remove('loading')
+        }
     }
 
     function confirmDeleteCandidate(e, id) {
@@ -873,7 +875,10 @@ function wrapper(pluginInfo) {
                 max-width:100%;
                 max-height:150px;
             }
-
+            .loading {
+                visibility: hidden;
+                height:150px;
+            }
 
             `
             )
