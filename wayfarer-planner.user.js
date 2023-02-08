@@ -37,53 +37,43 @@ function wrapper(pluginInfo) {
     const mapLayers = {
         potential: {
             color: 'grey',
-            title: 'Potentials',
-            optionTitle: 'Potential'
+            title: 'Potential'
         },
         held: {
             color: 'yellow',
-            title: 'On hold',
-            optionTitle: 'On hold'
+            title: 'On hold'
         },
         submitted: {
             color: 'orange',
-            title: 'Submitted',
-            optionTitle: 'Submitted'
+            title: 'Submitted'
         },
         voting: {
             color: 'brown',
-            title: 'Voting',
-            optionTitle: 'Voting'
+            title: 'Voting'
         },
         NIANTIC_REVIEW: {
             color: 'pink',
-            title: 'Niantic Review',
-            optionTitle: 'Niantic Review'
+            title: 'Niantic Review'
         },
         live: {
             color: 'green',
-            title: 'Accepted',
-            optionTitle: 'Live'
+            title: 'Accepted'
         },
         rejected: {
             color: 'red',
-            title: 'Rejected',
-            optionTitle: 'Rejected'
+            title: 'Rejected'
         },
         appealed: {
             color: 'black',
-            title: 'Appealed',
-            optionTitle: 'Appealed'
+            title: 'Appealed'
         },
         potentialedit: {
             color: 'cornflowerblue',
-            title: 'Potential edit',
-            optionTitle: 'Edit location. Potential'
+            title: 'Potential location edit'
         },
         sentedit: {
             color: 'purple',
-            title: 'Sent edit',
-            optionTitle: 'Edit location. Sent'
+            title: 'Sent location edit'
         }
     }
 
@@ -95,8 +85,70 @@ function wrapper(pluginInfo) {
         scriptURL: '',
         disableDraggingMarkers: false,
         enableCoordinatesEdit: true,
-        enableImagePreview: true
+        enableImagePreview: true,
+
+        // Default settings for map displays.
+        // Colors are in hexadecimal for compatibiltiy with color picker
+        submitRadiusColor: '#000000',
+        submitRadiusOpacity: 1.0,
+        submitRadiusFillColor: '#808080',
+        submitRadiusFillOpacity: 0.4,
+        interactRadiusColor: '#808080',
+        interactRadiusOpacity: 1.0,
+        interactRadiusFillColor: '#000000',
+        interactRadiusFillOpacity: 0.0,
+        votingProximityColor: '#000000',
+        votingProximityOpacity: 0.5,
+        votingProximityFillColor: '#FFA500',
+        votingProximityFillOpacity: 0.3,
+
+        // Creates arrays containing the marker types and radius settings.
+        // This prevents needing code for checking whether marker arrays exist throughout.
+        // Color is not included in settings by default unless the user changes color.
+        markers: {
+            potential: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            held: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            submitted: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            voting: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            NIANTIC_REVIEW: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            live: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            rejected: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            appealed: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            potentialedit: {
+                submitRadius: true,
+                interactRadius: true
+            },
+            sentedit: {
+                submitRadius: true,
+                interactRadius: true
+            }
+        }
     }
+
     let settings = defaultSettings
 
     function saveSettings() {
@@ -111,7 +163,7 @@ function wrapper(pluginInfo) {
         }
 
         try {
-            settings = JSON.parse(tmp)
+            settings = Object.assign({}, settings, JSON.parse(tmp))
         } catch (e) {
             // eslint-disable-line no-empty
         }
@@ -156,6 +208,8 @@ function wrapper(pluginInfo) {
                     alert('Wayfarer Planner. Exception parsing response.')
                     return
                 }
+                processCustomMarkers()
+                initializeLayers()
                 drawMarkers()
             },
             error: function (x, y, z) {
@@ -163,6 +217,92 @@ function wrapper(pluginInfo) {
                 alert(
                     "Wayfarer Planner. Failed to retrieve data from the scriptURL.\r\nVerify that you're using the right URL and that you don't use any extension that blocks access to google."
                 )
+            }
+        })
+    }
+
+    function processCustomMarkers() {
+        // Add any unexpected marker types to mapLayers
+        const mapLayersSet = new Set(Object.keys(mapLayers))
+        const newMarkers = markercollection.filter(
+            (marker) => !mapLayersSet.has(marker.status)
+        )
+        for (const marker of newMarkers) {
+            const markerStatus = marker.status
+            mapLayers[markerStatus] = {
+                title:
+                    markerStatus.charAt(0).toUpperCase() + markerStatus.slice(1)
+            }
+        }
+
+        // Define a list of default colors for new markers.
+        const colorList = [
+            '#27AE60',
+            '#73C6B6',
+            '#AEB6BF',
+            '#EDBB99',
+            '#AF601A',
+            '#CB4335',
+            '#F1948A',
+            '#2874A6',
+            '#D6EAF8',
+            '#239B56',
+            '#909497',
+            '#FAE5D3',
+            '#85C1E9',
+            '#9B59B6',
+            '#E67E22',
+            '#2980B9',
+            '#F2F3F4',
+            '#F1C40F',
+            '#BB8FCE',
+            '#FAD7A0',
+            '#C0392B',
+            '#F6DDCC',
+            '#1ABC9C',
+            '#117A65',
+            '#283747',
+            '#B7950B',
+            '#6C3483',
+            '#D0ECE7',
+            '#82E0AA'
+        ]
+        let colorListIndex = 0
+
+        for (const markerId in mapLayers) {
+            // Add custom markers to settings if they weren't already in there.
+            if (!settings.markers[markerId]) {
+                settings.markers[markerId] = {
+                    submitRadius: true,
+                    interactRadius: true
+                }
+            }
+
+            // Assign a default color to each custom marker.
+            if (!mapLayers[markerId].color) {
+                if (colorListIndex === colorList.length) {
+                    colorListIndex = 0
+                }
+                mapLayers[markerId].color = colorList[colorListIndex]
+                colorListIndex++
+            }
+
+            // Overwrite default colors with saved color settings if they exist.
+            mapLayers[markerId].color =
+                settings.markers[markerId].color || mapLayers[markerId].color
+        }
+    }
+
+    function initializeLayers() {
+        Object.values(mapLayers).forEach((data) => {
+            if (!data.initialized) {
+                const layer = new L.featureGroup()
+                data.layer = layer
+                window.addLayerGroup('Wayfarer - ' + data.title, layer, true)
+                layer.on('click', (e) => {
+                    markerClicked(e)
+                })
+                data.initialized = true
             }
         })
     }
@@ -181,50 +321,51 @@ function wrapper(pluginInfo) {
     }
 
     function addCircleToLayer(candidate) {
-        if (settings.showRadius) {
+        if (
+            settings.showInteractionRadius &&
+            settings.markers[candidate.status].interactRadius
+        ) {
             const latlng = L.latLng(candidate.lat, candidate.lng)
 
-            // Specify the no submit circle options
             const circleOptions = {
-                color: 'black',
-                opacity: 1,
-                fillColor: 'grey',
-                fillOpacity: 0.4,
-                weight: 1,
-                clickable: false,
-                interactive: false
-            }
-            const range = 20 // Hardcoded to 20m, the universal too close for new submit range of a portal
-
-            // Create the circle object with specified options
-            const circle = new L.Circle(latlng, range, circleOptions)
-            // Add the new circle
-            const existingMarker = plottedmarkers[candidate.id]
-            existingMarker.layer.addLayer(circle)
-
-            plottedsubmitrange[candidate.id] = circle
-        }
-        if (settings.showInteractionRadius) {
-            const latlng = L.latLng(candidate.lat, candidate.lng)
-
-            // Specify the interaction circle options
-            const circleOptions = {
-                color: 'grey',
-                opacity: 1,
-                fillOpacity: 0,
+                color: settings.interactRadiusColor,
+                opacity: settings.interactRadiusOpacity,
+                fillColor: settings.interactRadiusFillColor,
+                fillOpacity: settings.interactRadiusFillOpacity,
                 weight: 1,
                 clickable: false,
                 interactive: false
             }
             const range = 80
 
-            // Create the circle object with specified options
             const circle = new L.Circle(latlng, range, circleOptions)
-            // Add the new circle
             const existingMarker = plottedmarkers[candidate.id]
             existingMarker.layer.addLayer(circle)
-
             plottedinteractrange[candidate.id] = circle
+        }
+
+        // Draw the 20 metre submit radius
+        if (
+            settings.showRadius &&
+            settings.markers[candidate.status].submitRadius
+        ) {
+            const latlng = L.latLng(candidate.lat, candidate.lng)
+
+            const circleOptions = {
+                color: settings.submitRadiusColor,
+                opacity: settings.submitRadiusOpacity,
+                fillColor: settings.submitRadiusFillColor,
+                fillOpacity: settings.submitRadiusFillOpacity,
+                weight: 1,
+                clickable: false,
+                interactive: false
+            }
+            const range = 20
+
+            const circle = new L.Circle(latlng, range, circleOptions)
+            const existingMarker = plottedmarkers[candidate.id]
+            existingMarker.layer.addLayer(circle)
+            plottedsubmitrange[candidate.id] = circle
         }
     }
 
@@ -289,10 +430,11 @@ function wrapper(pluginInfo) {
                     plottedcells[cellId] = { candidateIds: [], polygon: null }
                     const vertexes = surrounding[i].getCornerLatLngs()
                     const polygon = L.polygon(vertexes, {
-                        color: 'black',
-                        opacity: 0.5,
-                        fillColor: 'orange',
-                        fillOpacity: 0.3
+                        color: settings.votingProximityColor,
+                        opacity: settings.votingProximityOpacity,
+                        fillColor: settings.votingProximityFillColor,
+                        fillOpacity: settings.votingProximityFillOpacity,
+                        weight: 1
                     })
                     plottedcells[cellId].polygon = polygon
                     polygon.addTo(map)
@@ -442,7 +584,7 @@ function wrapper(pluginInfo) {
                     '"' +
                     (id === status ? ' selected="selected"' : '') +
                     '>' +
-                    mapLayers[id].optionTitle +
+                    mapLayers[id].title +
                     '</option>'
             )
             .join('')
@@ -582,9 +724,9 @@ function wrapper(pluginInfo) {
         drawInputPopop(event.layer.getLatLng(), event.layer.options.data)
     }
 
-    function getGenericMarkerSvg(color) {
+    function getGenericMarkerSvg(color, markerClassName) {
         const markerTemplate = `<?xml version="1.0" encoding="UTF-8"?>
-            <svg xmlns="http://www.w3.org/2000/svg" baseProfile="full" viewBox="0 0 25 41">
+            <svg xmlns="http://www.w3.org/2000/svg" baseProfile="full" viewBox="0 0 25 41" width="25" height="41" ${markerClassName}>
                 <path d="M19.4,3.1c-3.3-3.3-6.1-3.3-6.9-3.1c-0.6,0-3.7,0-6.9,3.1c-4,4-1.3,9.4-1.3,9.4s5.6,14.6,6.3,16.3c0.6,1.2,1.3,1.5,1.7,1.5c0,0,0,0,0.2,0h0.2c0.4,0,1.2-0.4,1.7-1.5c0.8-1.7,6.3-16.3,6.3-16.3S23.5,7.2,19.4,3.1z M13.1,12.4c-2.3,0.4-4.4-1.5-4-4c0.2-1.3,1.3-2.5,2.9-2.9c2.3-0.4,4.4,1.5,4,4C15.6,11,14.4,12.2,13.1,12.4z" fill="%COLOR%" stroke="#fff"/>
                 <path d="M12.5,34.1c1.9,0,3.5,1.5,3.5,3.5c0,1.9-1.5,3.5-3.5,3.5S9,39.5,9,37.5c0-1.2,0.6-2.2,1.5-2.9 C11.1,34.3,11.8,34.1,12.5,34.1z" fill="%COLOR%" stroke="#fff"/>
             </svg>`
@@ -596,7 +738,7 @@ function wrapper(pluginInfo) {
         return L.divIcon({
             iconSize: new L.Point(25, 41),
             iconAnchor: new L.Point(12, 41),
-            html: getGenericMarkerSvg(color),
+            html: getGenericMarkerSvg(color, ''),
             className: className || 'leaflet-iitc-divicon-generic-marker'
         })
     }
@@ -614,6 +756,182 @@ function wrapper(pluginInfo) {
         return L.marker(ll, markerOpt)
     }
 
+    function editMarkerColors() {
+        // Create the HTML code for the marker options.
+        let html = ''
+
+        const hideCheckboxes = !(
+            settings.showRadius || settings.showInteractionRadius
+        )
+        const firstColumnWidth = hideCheckboxes ? '100px' : '70px'
+        const boxWidth = hideCheckboxes ? '185px' : '300px'
+
+        // Through all markers that have been loaded. Generate one row per marker.
+        const keys = Object.keys(mapLayers)
+        for (let i = 0; i < keys.length; i++) {
+            const markerId = keys[i]
+            const markerDetails = mapLayers[markerId]
+            let colorValue = markerDetails.color
+            const submitRadius = settings.markers[markerId].submitRadius
+            const interactRadius = settings.markers[markerId].interactRadius
+
+            // Make sure that the color is in #rrggbb format for color picker.
+            const ctx = document.createElement('canvas').getContext('2d')
+            ctx.fillStyle = colorValue
+            colorValue = ctx.fillStyle
+
+            html += `<p class="marker-colors">
+            <div class="options-row">
+                <div class="options-label-col" style="width: ${firstColumnWidth};">
+                    <div class="label-title">${markerDetails.title}:
+                </div>
+            </div>
+            <div class="options-marker-col">
+                <div id='marker.${markerId}.color' class="marker-icon-container">
+                    ${getGenericMarkerSvg(
+                        colorValue,
+                        `class = "marker-icon" id = "marker.${markerId}.svg"`
+                    )}
+                    <input type="color" class="marker-color-input" id="marker.${markerId}" value="${colorValue}">
+                </div>
+            </div>
+            <div>
+                <input type="color" class="options-color-input-box" id="marker.${markerId}.colorPicker" value="${colorValue}">
+            </div>`
+            if (!hideCheckboxes) {
+                html += '<div class="options-checkbox-col">'
+                if (settings.showRadius) {
+                    html += `<div class="options-radius-row">
+                            <input type='checkbox' id='${markerId}.submitRadius' ${
+                        submitRadius ? 'checked' : ''
+                    } value=true>
+                            <span class='radius-label'> Submit Radius</span>
+
+                        </div>`
+                }
+                if (settings.showInteractionRadius) {
+                    html += `<div class="options-radius-row">
+                            <input type='checkbox' id='${markerId}.interactRadius' ${
+                        interactRadius ? 'checked' : ''
+                    } value=true>
+                            <span class='radius-label'> Interact Radius</span>
+                        </div>`
+                }
+                html += '</div>'
+            }
+            html += '</div></p>'
+        }
+
+        const container = dialog({
+            id: 'markerColors',
+            width: boxWidth,
+            html: html,
+            title: 'Planner Marker Customisation'
+        })
+
+        const div = container[0]
+
+        div.addEventListener('change', (event) => {
+            const id = event.target.id
+            const splitId = id.split('.')
+
+            if (event.target.type === 'checkbox') {
+                // Update the marker radius data and add to the settings
+                const value = event.target.checked
+                settings.markers[splitId[0]][splitId[1]] = value
+            } else {
+                const value = event.target.value
+                const markerId = [splitId[1]]
+                // Update the marker color data on the form
+                document.getElementById(
+                    `marker.${markerId}.colorPicker`
+                ).value = value
+                const svg = document.getElementById(`marker.${markerId}.svg`)
+                svg.querySelectorAll('path, circle').forEach(
+                    (path) => (path.style.fill = value)
+                )
+                // Update the marker color data on the map and in the settings
+                mapLayers[markerId].color = value
+                settings.markers[markerId].color = value
+            }
+            saveSettings()
+            drawMarkers()
+        })
+    }
+
+    function editMapFeatures() {
+        // Create the HTML for the general map display options.
+        let html = ''
+
+        const optionSetting = [
+            'submitRadius',
+            'submitRadiusFill',
+            'interactRadius',
+            'interactRadiusFill',
+            'votingProximity',
+            'votingProximityFill'
+        ]
+        const optionTitle = [
+            'Submit Radius Border',
+            'Submit Radius Fill',
+            'Interact Radius Border',
+            'Interact Radius Fill',
+            'Voting Proximity Border',
+            'Voting Proximity Fill'
+        ]
+
+        // HTML template which is used for each row of the display.
+        const optionHTML = `Color: <input type='color' id='idColor' value='colorValue'>
+                            Opacity: <select id='idOpacity'>
+                                <option value='0'>0.0</option>
+                                <option value='0.1'>0.1</option>
+                                <option value='0.2'>0.2</option>
+                                <option value='0.3'>0.3</option>
+                                <option value='0.4'>0.4</option>
+                                <option value='0.5'>0.5</option>
+                                <option value='0.6'>0.6</option>
+                                <option value='0.7'>0.7</option>
+                                <option value='0.8'>0.8</option>
+                                <option value='0.9'>0.9</option>
+                                <option value='1'>1.0</option>
+                            </select>`
+
+        // Loop through all of the option settings and insert their values into above template.
+        for (let i = 0; i < optionSetting.length; i++) {
+            const colorValue = settings[`${optionSetting[i]}Color`]
+            const opacityValue = settings[`${optionSetting[i]}Opacity`]
+
+            html += `<p class='planner-colors'>${optionTitle[i]}<br>
+                     ${optionHTML
+                         .replace('idColor', `${optionSetting[i]}Color`)
+                         .replace('colorValue', colorValue)
+                         .replace('idOpacity', `${optionSetting[i]}Opacity`)
+                         .replace(
+                             `value='${opacityValue}'`,
+                             `value='${opacityValue}' selected`
+                         )}
+                      </p>`
+        }
+
+        const container = dialog({
+            id: 'plannermMapFeatures',
+            width: '220px',
+            html: html,
+            title: 'Planner Map Customisation'
+        })
+
+        const div = container[0]
+
+        // If changes are made to settings, save the changes and update the map.
+        div.addEventListener('change', (event) => {
+            const id = event.target.id
+            const value = event.target.value
+            settings[id] = value
+            saveSettings()
+            drawMarkers()
+        })
+    }
+
     function showDialog() {
         if (window.isSmartphone()) {
             window.show('map')
@@ -628,6 +946,8 @@ function wrapper(pluginInfo) {
              <p><input type="checkbox" id="chkEnableDraggingMarkers"><label for="chkEnableDraggingMarkers">Enable Dragging Markers</label></p>
              <p><input type="checkbox" id="chkEnableCoordinatesEdit"><label for="chkEnableCoordinatesEdit">Enable Coordinates Edit</label></p>
              <p><input type="checkbox" id="chkEnableImagePreview"><label for="chkEnableImagePreview">Enable Image Preview</label></p>
+             <p><a id='plannerEditMapFeatures'>Customise Map Visuals</a></p>
+             <p><a id='plannerEditMarkerColors'>Customise Marker Appearance</a></p>
             `
 
         const container = dialog({
@@ -768,6 +1088,22 @@ function wrapper(pluginInfo) {
             }
             $('.toggle-create-waypoints').hide()
         })
+        const plannerEditMapFeatures = div.querySelector(
+            '#plannerEditMapFeatures'
+        )
+        plannerEditMapFeatures.addEventListener('click', function (e) {
+            editMapFeatures()
+            e.preventDefault()
+            return false
+        })
+        const plannerEditMarkerColors = div.querySelector(
+            '#plannerEditMarkerColors'
+        )
+        plannerEditMarkerColors.addEventListener('click', function (e) {
+            editMarkerColors()
+            e.preventDefault()
+            return false
+        })
     }
 
     // Initialize the plugin
@@ -875,6 +1211,50 @@ function wrapper(pluginInfo) {
                 max-width:100%;
                 max-height:150px;
             }
+            .options-row {
+                display: flex;
+                align-items: center;
+            }
+            .options-label-col {
+                width: 70px;
+                text-align: right;
+                margin-right: 4px;
+            }
+            .options-marker-col {
+                width: 30px;
+                text-align: center;
+                position: relative;
+            }
+            .marker-color-input {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1; /* Higher than the z-index of the marker SVG */
+                opacity: 0;
+            }
+            .options-marker-col .marker-icon {
+                z-index: 0; /* Lower than the z-index of the color input */
+            }
+            .options-checkbox-col {
+                display: flex;
+                flex-direction: column;
+            }
+            .options-radius-row {
+                align-items: center;
+                display: flex;
+            }
+            .radius-label {
+                flex: 1;
+                text-align: left;
+            }
+            .options-color-input-box {
+                width: 30px;
+                height: 30px;
+                margin-left: 12px;
+                margin-right: 12px;
+            }
             .loading {
                 visibility: hidden;
                 height:150px;
@@ -921,13 +1301,6 @@ function wrapper(pluginInfo) {
         })
 
         map.on('click', onMapClick)
-
-        Object.values(mapLayers).forEach((data) => {
-            const layer = new L.featureGroup()
-            data.layer = layer
-            window.addLayerGroup('Wayfarer - ' + data.title, layer, true)
-            layer.on('click', markerClicked)
-        })
 
         const toolbox = document.getElementById('toolbox')
 
