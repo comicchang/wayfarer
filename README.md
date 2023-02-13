@@ -120,3 +120,8 @@ I suggested to provide patches to the original version in order to fix some issu
 5. Allow to remove candidates from the map.  
 6. Layout improvements to the edit dialog.
 7. Anything that comes after renaming it to "Wayfarer planner." https://gitlab.com/NvlblNm/wayfarer/commits/master
+
+## I want to help!
+
+Awesome, check out [CONTRIBUTING](CONTRIBUTING.md) to get started!
+
