@@ -1,4 +1,7 @@
 {
+  "scripts" : {
+    "validate": "npx eslint --format gitlab --fix *.js && npx prettier --write *.js && npx prettier --check *.js"
+  },
   "dependencies": {
     "eslint-config-standard": "^17.0.0",
     "prettier": "^2.8.3"
