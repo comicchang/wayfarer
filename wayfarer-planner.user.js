@@ -555,6 +555,7 @@ function wrapper(pluginInfo) {
         let description = ''
         let id = ''
         let submitteddate = ''
+        let nickname = ''
         let lat = ''
         let lng = ''
         let status = 'potential'
@@ -565,6 +566,7 @@ function wrapper(pluginInfo) {
             title = markerData.title
             description = markerData.description
             submitteddate = markerData.submitteddate
+            nickname = markerData.nickname
             status = markerData.status
             imageUrl = markerData.candidateimageurl
             lat = parseFloat(markerData.lat).toFixed(6)
@@ -626,6 +628,9 @@ function wrapper(pluginInfo) {
             <div class='wayfarer-expander' title='Click to expand additional fields'>»</div>
             <div class='wayfarer-extraData'>
             ${coordinates}
+            <label>Submitter
+            <input name="submitter" type="text" value="${nickname}" disabled>
+            </label>
             <label>Submitted date
             <input name="submitteddate" type="text" autocomplete="off" placeholder="dd-mm-jjjj" value="${submitteddate}">
             </label>
