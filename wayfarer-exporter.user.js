@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Wayfarer Exporter
-// @version      0.9
+// @version      0.10
 // @description  Export nominations data from Wayfarer to IITC in Wayfarer Planner
 // @namespace    https://gitlab.com/NvlblNm/wayfarer/
 // @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-exporter.user.js
@@ -53,12 +53,15 @@ function init() {
         try {
             const response = this.response
             const json = JSON.parse(response)
-            sentNominations = json && json.result && json.result.nominations
-            if (!sentNominations) {
+            const nominations = json && json.result && json.result.nominations
+            if (!nominations) {
                 logMessage('Failed to parse nominations from Wayfarer')
                 return
             }
-            analyzeCandidates()
+            sentNominations = nominations.filter(
+                (nomination) => nomination.type === 'NOMINATION'
+            )
+            analyzeCandidates(sentNominations)
         } catch (e) {
             console.log(e) // eslint-disable-line no-console
         }
@@ -171,10 +174,14 @@ function init() {
             const cell17id = cell17.toString()
             Object.keys(currentCandidates).forEach((idx) => {
                 const candidate = currentCandidates[idx]
-                // if it finds a candidate in the same level 17 cell and less than 20 meters away, handle it as the nomination for this
+                // if it finds a potential candidate in the same level 17 cell and less than 3 meters away, handle it as the nomination for this
+                // Relax the distance requirement a bit if the title of the potential candidate matches the nomination title exactly
                 if (
+                    candidate.status === 'potential' &&
                     candidate.cell17id === cell17id &&
-                    getDistance(candidate, nomination) < 20
+                    ((candidate.title === nomination.title &&
+                        getDistance(candidate, nomination) < 10) ||
+                        getDistance(candidate, nomination) < 3)
                 ) {
                     // if we find such candidate, remove it because we're gonna add now the new one with a new id
                     logMessage(`Found manual candidate for ${candidate.title}`)
