@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Wayfarer Exporter
-// @version      0.10
+// @version      0.11
 // @description  Export nominations data from Wayfarer to IITC in Wayfarer Planner
 // @namespace    https://gitlab.com/NvlblNm/wayfarer/
 // @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-exporter.user.js
@@ -53,7 +53,7 @@ function init() {
         try {
             const response = this.response
             const json = JSON.parse(response)
-            const nominations = json && json.result && json.result.nominations
+            const nominations = json && json.result && json.result.submissions
             if (!nominations) {
                 logMessage('Failed to parse nominations from Wayfarer')
                 return
