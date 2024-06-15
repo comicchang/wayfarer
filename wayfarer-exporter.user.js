@@ -4,6 +4,7 @@
 // @description  Export nominations data from Wayfarer to IITC in Wayfarer Planner
 // @namespace    https://gitlab.com/NvlblNm/wayfarer/
 // @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-exporter.user.js
+// @updateURL    https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-exporter.user.js
 // @homepageURL  https://gitlab.com/NvlblNm/wayfarer/
 // @match        https://wayfarer.nianticlabs.com/*
 // ==/UserScript==
