@@ -5,6 +5,7 @@
 // @version      1.181
 // @namespace    https://gitlab.com/NvlblNm/wayfarer/
 // @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js
+// @updateURL    https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js
 // @homepageURL  https://gitlab.com/NvlblNm/wayfarer/
 // @description  Place markers on the map for your candidates in Wayfarer.
 // @match        https://intel.ingress.com/*
