@@ -1,5 +1,5 @@
 # ⚠️ Warning! ⚠️
-This plugin cannot show you wayspots which are not in Ingress. You can see these using Geospatial Browser.
+IITC cannot show you wayspots which are not in Ingress. You can see these using Geospatial Browser.
 1. [Register for a Lightship account](https://lightship.dev/signin/create-account)
 2. [Use Geospatial Browser](https://lightship.dev/account/geospatial-browser/)
 
