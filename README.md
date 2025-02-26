@@ -1,3 +1,10 @@
+# ⚠️ Warning! ⚠️
+This plugin cannot show you wayspots which are not in Ingress. You can see these using Geospatial Browser.
+1. [Register for a Lightship account](https://lightship.dev/signin/create-account)
+2. [Use Geospatial Browser](https://lightship.dev/account/geospatial-browser/)
+
+This will enable you to see the additional wayspots that do not appear in Ingress.
+
 ## Wayfarer Planner, an IITC plugin to help you nominate and keep track of your candidates
 
 Let's say that you already have the map of PokéStops and Gyms (or just Portals if you're only an Ingress player, something like this using [Pogo Tools](https://gitlab.com/NvlblNm/pogo-s2/):
