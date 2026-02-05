@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Wayfarer Exporter
-// @version      0.12
+// @version      0.13
 // @description  Export nominations data from Wayfarer to IITC in Wayfarer Planner
 // @namespace    https://github.com/comicchang/wayfarer/
 // @downloadURL  https://github.com/comicchang/wayfarer/raw/refs/heads/master/wayfarer-exporter.user.js
@@ -82,6 +82,7 @@ function init() {
             }
 
             currentCandidates = candidates
+            cleanupAcceptedCandidates()
             logMessage(`Analyzing ${sentNominations.length} nominations.`)
             let modifiedCandidates = false
             sentNominations.forEach((nomination) => {
@@ -285,6 +286,22 @@ function init() {
         console.log('Approved nomination', nomination)
         updateStatus(nomination, statusConvertor(nomination.status))
         delete currentCandidates[nomination.id]
+    }
+
+    function cleanupAcceptedCandidates() {
+        const cutoff = Date.now() - 24 * 60 * 60 * 1000
+        Object.keys(currentCandidates).forEach((id) => {
+            const candidate = currentCandidates[id]
+            if (candidate.status !== 'ACCEPTED') {
+                return
+            }
+            const timestamp = new Date(candidate.timestamp).getTime()
+            if (!Number.isNaN(timestamp) && timestamp <= cutoff) {
+                logMessage(`Removing accepted candidate ${candidate.title}`)
+                updateStatus(candidate, 'delete')
+                delete currentCandidates[id]
+            }
+        })
     }
 
     function appealCandidate(nomination, existingCandidate) {
@@ -567,7 +584,8 @@ function init() {
                         description: c.description,
                         lat: c.lat,
                         lng: c.lng,
-                        status: c.status
+                        status: c.status,
+                        timestamp: c.timestamp
                     }
                 })
                 localStorage['wayfarerexporter-url'] = url

@@ -5,7 +5,7 @@ The first time it will prompt you for the URL that you are using in [Wayfarer Pl
 
 ### How does it handle candidates:
 Let's suppose that you haven't added anything in IITC, then it will add a "submitted" marker in IITC for every candidate that you have with the status of "In Voting" or "In Queue" that shows up on the Wayfarer site.  
-Now these markers will be tracked by the Exporter plugin, so when you load the page again in the future, if they are approved they will be removed from the map (you no longer need them). The sheet row is kept and its status is updated to ACCEPTED, but the entry is no longer tracked locally.  
+Now these markers will be tracked by the Exporter plugin, so when you load the page again in the future, if they are approved they will be removed from the map (you no longer need them). The sheet row is kept and its status is updated to ACCEPTED, but the entry is only deleted after it has been in ACCEPTED state for ~24 hours (based on the sheet timestamp). This differs from the upstream behavior, which removes ACCEPTED rows immediately.  
 On the other hand, if they are rejected, marked as duplicate or if you withdraw those candidates, they will be marked on the map as "rejected", so you can easily remember the places to remove (maybe the Wayspot has already been approved by another person), or to send them again in the future.
 Of course, if you've planned previously you already have a marker on those locations, so the plugin tries to find if you have any such candidate less than 20 meters away from the new ones that it finds, and so it removes the existing ones to prevent cluttering your map with duplicated markers.
 
