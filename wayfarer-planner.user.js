@@ -3,10 +3,10 @@
 // @name         IITC plugin: Wayfarer Planner
 // @category     Layer
 // @version      1.181
-// @namespace    https://gitlab.com/NvlblNm/wayfarer/
-// @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js
-// @updateURL    https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-planner.user.js
-// @homepageURL  https://gitlab.com/NvlblNm/wayfarer/
+// @namespace    https://github.com/comicchang/wayfarer/
+// @downloadURL  https://github.com/comicchang/wayfarer/raw/refs/heads/master/wayfarer-planner.user.js
+// @updateURL    https://github.com/comicchang/wayfarer/raw/refs/heads/master/wayfarer-planner.user.js
+// @homepageURL  https://github.com/comicchang/wayfarer/
 // @description  Place markers on the map for your candidates in Wayfarer.
 // @match        https://intel.ingress.com/*
 // @grant none

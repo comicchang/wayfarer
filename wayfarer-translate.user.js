@@ -2,10 +2,11 @@
 // @name         Wayfarer Translate
 // @version      0.3.3
 // @description  Add translate option to Wayfarer
-// @namespace    https://gitlab.com/NvlblNm/wayfarer/
-// @downloadURL  https://gitlab.com/NvlblNm/wayfarer/raw/master/wayfarer-translate.user.js
-// @homepageURL  https://gitlab.com/NvlblNm/wayfarer/
+// @namespace    https://github.com/comicchang/wayfarer/
+// @downloadURL  https://github.com/comicchang/wayfarer/raw/refs/heads/master/wayfarer-translate.user.js
+// @homepageURL  https://github.com/comicchang/wayfarer/
 // @match        https://wayfarer.nianticlabs.com/*
+// @match        https://opr.ingress.com/*
 // ==/UserScript==
 
 /* eslint-env es6 */
