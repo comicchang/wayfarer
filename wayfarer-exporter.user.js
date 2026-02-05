@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Wayfarer Exporter
-// @version      0.11
+// @version      0.12
 // @description  Export nominations data from Wayfarer to IITC in Wayfarer Planner
 // @namespace    https://github.com/comicchang/wayfarer/
 // @downloadURL  https://github.com/comicchang/wayfarer/raw/refs/heads/master/wayfarer-exporter.user.js
@@ -111,10 +111,7 @@ function init() {
 
         if (existingCandidate) {
             if (nomination.status === 'ACCEPTED') {
-                // Ok, we don't have to track it any longer.
-                logMessage(`Approved candidate ${nomination.title}`)
-                deleteCandidate(nomination)
-                delete currentCandidates[id]
+                acceptCandidate(nomination)
                 return true
             }
             if (nomination.status === 'REJECTED') {
@@ -243,6 +240,9 @@ function init() {
         if (status === 'APPEALED') {
             return 'appealed'
         }
+        if (status === 'ACCEPTED') {
+            return 'ACCEPTED'
+        }
 
         return status
     }
@@ -278,6 +278,13 @@ function init() {
         logMessage(`Rejected nomination ${nomination.title}`)
         console.log('Rejected nomination', nomination)
         updateStatus(nomination, 'rejected')
+    }
+
+    function acceptCandidate(nomination) {
+        logMessage(`Approved candidate ${nomination.title}`)
+        console.log('Approved nomination', nomination)
+        updateStatus(nomination, statusConvertor(nomination.status))
+        delete currentCandidates[nomination.id]
     }
 
     function appealCandidate(nomination, existingCandidate) {
@@ -548,7 +555,8 @@ function init() {
                         c.status === 'potential' ||
                         c.status === 'held' ||
                         c.status === 'rejected' ||
-                        c.status === 'appealed'
+                        c.status === 'appealed' ||
+                        c.status === 'ACCEPTED'
                 )
 
                 const candidates = {}
