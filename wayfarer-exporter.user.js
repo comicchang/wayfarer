@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Wayfarer Exporter
-// @version      0.13
+// @version      0.13.1
 // @description  Export nominations data from Wayfarer to IITC in Wayfarer Planner
 // @namespace    https://github.com/comicchang/wayfarer/
 // @downloadURL  https://github.com/comicchang/wayfarer/raw/refs/heads/master/wayfarer-exporter.user.js
@@ -298,7 +298,7 @@ function init() {
             const timestamp = new Date(candidate.timestamp).getTime()
             if (!Number.isNaN(timestamp) && timestamp <= cutoff) {
                 logMessage(`Removing accepted candidate ${candidate.title}`)
-                updateStatus(candidate, 'delete')
+                updateStatus({ ...candidate, id }, 'delete')
                 delete currentCandidates[id]
             }
         })
