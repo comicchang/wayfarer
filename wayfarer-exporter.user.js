@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Wayfarer Exporter
-// @version      0.13.1
+// @version      0.13.2
 // @description  Export nominations data from Wayfarer to IITC in Wayfarer Planner
 // @namespace    https://github.com/comicchang/wayfarer/
 // @downloadURL  https://github.com/comicchang/wayfarer/raw/refs/heads/master/wayfarer-exporter.user.js
@@ -82,7 +82,6 @@ function init() {
             }
 
             currentCandidates = candidates
-            cleanupAcceptedCandidates()
             logMessage(`Analyzing ${sentNominations.length} nominations.`)
             let modifiedCandidates = false
             sentNominations.forEach((nomination) => {
@@ -286,22 +285,6 @@ function init() {
         console.log('Approved nomination', nomination)
         updateStatus(nomination, statusConvertor(nomination.status))
         delete currentCandidates[nomination.id]
-    }
-
-    function cleanupAcceptedCandidates() {
-        const cutoff = Date.now() - 24 * 60 * 60 * 1000
-        Object.keys(currentCandidates).forEach((id) => {
-            const candidate = currentCandidates[id]
-            if (candidate.status !== 'ACCEPTED') {
-                return
-            }
-            const timestamp = new Date(candidate.timestamp).getTime()
-            if (!Number.isNaN(timestamp) && timestamp <= cutoff) {
-                logMessage(`Removing accepted candidate ${candidate.title}`)
-                updateStatus({ ...candidate, id }, 'delete')
-                delete currentCandidates[id]
-            }
-        })
     }
 
     function appealCandidate(nomination, existingCandidate) {
@@ -564,7 +547,28 @@ function init() {
                 return JSON.parse(data)
             })
             .then(function (allData) {
-                const submitted = allData.filter(
+                const cutoff = Date.now() - 24 * 60 * 60 * 1000
+                const isExpiredAccepted = (candidate) => {
+                    if (candidate.status !== 'ACCEPTED') {
+                        return false
+                    }
+                    const timestamp = new Date(candidate.timestamp).getTime()
+                    return !Number.isNaN(timestamp) && timestamp <= cutoff
+                }
+                allData.forEach((candidate) => {
+                    if (isExpiredAccepted(candidate)) {
+                        logMessage(
+                            `Removing accepted candidate ${candidate.title}`
+                        )
+                        updateStatus(candidate, 'delete')
+                    }
+                })
+
+                const activeData = allData.filter(
+                    (candidate) => !isExpiredAccepted(candidate)
+                )
+                const candidates = {}
+                const submittedActive = activeData.filter(
                     (c) =>
                         c.status === 'submitted' ||
                         c.status === 'voting' ||
@@ -576,8 +580,7 @@ function init() {
                         c.status === 'ACCEPTED'
                 )
 
-                const candidates = {}
-                submitted.forEach((c) => {
+                submittedActive.forEach((c) => {
                     candidates[c.id] = {
                         cell17id: S2.S2Cell.FromLatLng(c, 17).toString(),
                         title: c.title,
@@ -595,7 +598,7 @@ function init() {
                     JSON.stringify(candidates)
                 const tracked = Object.keys(candidates).length
                 logMessage(
-                    `Loaded a total of ${allData.length} candidates from the spreadsheet.`
+                    `Loaded a total of ${activeData.length} candidates from the spreadsheet.`
                 )
                 logMessage(`Currently tracking: ${tracked}.`)
 
